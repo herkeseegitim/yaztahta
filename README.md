@@ -17,7 +17,7 @@ Nasıl kullanıldığını YouTube'da gösteriyorum: https://www.youtube.com/@eg
 - **Tuşun yolculuğu:** Tuştan ekrana giden yol.
 - **Klavye yapbozu.**
 - **Tatildeki tuş:** Bir tuş tatile çıkar, defter onsuz bozulur, kartpostal gelir. Sınıf hangi tuşun eksik olduğunu bulur. "Sınıfın cümlesi" ile sınıfın söylediği cümleden bir tuş tatile çıkar.
-- **Meraklısına, On parmak:** 3–4. sınıf için isteğe bağlı on parmak çalışması.
+- **Meraklısına, On parmak:** İsteyen öğrenci için on parmak çalışması. Gözler kapalı çalışma ve şekille ayrılan parmaklar var.
 - Seslendirme gömülü. İnternet istemez.
 
 Harf sırası Türkçede Maarif ilk okuma yazma ses sırasını izler. Son öğrenilen sesi seçersiniz, yalnız o sese kadar olan harfler açılır.
@@ -29,7 +29,7 @@ Bilgisayar laboratuvarında:
 2. "Bilgisayar başında"yı seç.
 3. Sınıfı, klavyeyi ve son öğrenilen sesi seç.
 4. "Başlayalım"a bas. Her öğrenci kendi görevini yapar.
-5. Takılan öğrenci "Yardım istiyorum"a basar. Sen gelene kadar görev bekler.
+5. Takılan öğrenci "Yardım istiyorum"a basar, ekranın çevresi çizgilenir. Labın öbür ucundan görürsün.
 
 Etkileşimli tahtada:
 1. Adresi tahtanın tarayıcısında aç.
@@ -94,7 +94,7 @@ I show how to use it on YouTube: https://www.youtube.com/@egitimtek
 - **Key's journey:** the path from key to screen.
 - **Keyboard puzzle.**
 - **Key on holiday:** a key goes on holiday, the notebook breaks without it, a postcard arrives, and the class works out which key is missing. "Class sentence" takes one key out of a sentence the class says.
-- **For the curious, Ten fingers:** an optional ten-finger section for grades 3–4.
+- **For the curious, Ten fingers:** an optional touch-typing section for pupils who want more, with an eyes-closed mode and fingers marked by shape as well as colour.
 - Built-in voice-over. No internet needed.
 
 In English, letters open in the Jolly Phonics letter order. You pick the last letter taught, and only letters up to it are used.
@@ -106,7 +106,7 @@ In the computer lab:
 2. Choose "At the computer".
 3. Choose the grade, the keyboard and the last letter we learned.
 4. Press "Let's start". Each pupil works on their own task.
-5. A pupil who is stuck presses "I need help". The task waits for you.
+5. A pupil who is stuck presses "I need help" and the screen gets a striped frame. You can see it from across the lab.
 
 On the interactive board:
 1. Open the address in the board's browser.
