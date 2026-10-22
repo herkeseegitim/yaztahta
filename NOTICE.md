@@ -36,7 +36,20 @@ limitations under the License.
 
 The model itself is not included in YazTahta. Only generated audio is embedded.
 
-## 3. Trademark
+## 3. QR code generator: qrcode-generator
+
+- Library: QR Code Generator for JavaScript (qrcode-generator 2.0.4), by Kazuhiko Arase.
+- Used by the repair station (Tamir istasyonu) to draw the ticket's QR code inside the page. It makes no network calls.
+- License: MIT.
+
+```
+Copyright (c) 2009 Kazuhiko Arase
+URL: www.d-project.com
+Licensed under the MIT license.
+The word 'QR Code' is registered trademark of DENSO WAVE INCORPORATED.
+```
+
+## 4. Trademark
 
 "Jolly Phonics" is a trademark of Jolly Learning Ltd. YazTahta's English mode follows the Jolly Phonics letter order. The name is used only to describe that order. YazTahta is not made, approved or endorsed by Jolly Learning Ltd.
 
