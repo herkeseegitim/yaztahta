@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-ROS7QRdI/YwB5ALxaStP290iz3+/ClG97wAfAn0anNY='; style-src 'unsafe-inline'; img-src data:; media-src data:; connect-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-tllRiGsHkVa1qZ/G7Y9PYoNuBZcP/6LKGH0imO4T+RY='; style-src 'unsafe-inline'; img-src data:; media-src data:; connect-src 'none'; base-uri 'none'; form-action 'none'">
 <title>YazTahta</title>
 <style>
 :root{--krem:#FBF6EC;--kart:#FFFDF8;--mor:#5B3E96;--mor-a:#ECE5F7;--tur:#D9631E;--tur-a:#FCE9DB;--sari:#F2C14E;--sari-a:#FBF0CF;--teal:#1F7A75;--teal-a:#DDF0EE;--murekkep:#2B2238;--ikinci:#5A5266;--cizgi:#CFC5B3;--u:44px;--yaz:"DejaVu Sans","Segoe UI","Noto Sans",Arial,sans-serif}
@@ -4545,10 +4545,10 @@ var qrcode = function() {
       'tm.hazirla': 'Bileti hazırla',
       'tm.secin': 'Önce ne olduğunu seçin.',
       'tm.bilet': 'Tamir bileti',
-      'tm.okut': 'Telefonunuzla okutun. E-posta hazır açılır, siz gönderirsiniz.',
+      'tm.okut': 'Telefonunuzla okutun, e-posta hazır açılır; Gönder\'e siz basarsınız. Bilgisayardaysanız Gmail\'de ya da Outlook\'ta açın.',
       'tm.adres': 'Adres: {a}',
-      'tm.eposta': 'E-postayla gönder', 'tm.kopyala': 'Metni kopyala', 'tm.kopyalandi': 'Kopyalandı.', 'tm.geri': 'Geri', 'tm.kapat': 'Kapat',
-      'tm.kisaldi': 'Not karekoda sığmadı, kısaltıldı. Tam metin için E-postayla gönder ya da Metni kopyala.',
+      'tm.eposta': 'E-posta programında aç', 'tm.gmail': 'Gmail\'de aç', 'tm.outlook': 'Outlook\'ta aç', 'tm.gonderdim': 'Gönderdim', 'tm.acildi': 'Taslak açıldı. Gönder\'e basınca bize ulaşır; sonra buradan Gönderdim deyin.', 'tm.kopyala': 'Metni kopyala', 'tm.kopyalandi': 'Kopyalandı.', 'tm.geri': 'Geri', 'tm.kapat': 'Kapat',
+      'tm.kisaldi': 'Not karekoda sığmadı, kısaltıldı. Tam metin Gmail, Outlook ve Metni kopyala seçeneklerinde var.',
       'tm.tesekkur': 'Teşekkürler. Okuyorum, bakıyorum.',
       'tm.konu': 'YazTahta tamir bileti: {n}',
       'tm.govde.ne': 'Ne oldu', 'tm.govde.not': 'Not', 'tm.govde.son': 'Herkese Eğitim · YazTahta tamir istasyonu'
@@ -4577,10 +4577,10 @@ var qrcode = function() {
       'tm.hazirla': 'Print the ticket',
       'tm.secin': 'First choose what happened.',
       'tm.bilet': 'Repair ticket',
-      'tm.okut': 'Scan it with your phone. The email opens ready; you send it.',
+      'tm.okut': 'Scan it with your phone; the email opens ready and you press Send. On a computer, open it in Gmail or Outlook.',
       'tm.adres': 'Address: {a}',
-      'tm.eposta': 'Send by email', 'tm.kopyala': 'Copy the text', 'tm.kopyalandi': 'Copied.', 'tm.geri': 'Back', 'tm.kapat': 'Close',
-      'tm.kisaldi': 'The note did not fit in the code and was shortened. For the full text use Send by email or Copy the text.',
+      'tm.eposta': 'Open in mail app', 'tm.gmail': 'Open in Gmail', 'tm.outlook': 'Open in Outlook', 'tm.gonderdim': 'I sent it', 'tm.acildi': 'A draft opened. It reaches us when you press Send there; then tap I sent it here.', 'tm.kopyala': 'Copy the text', 'tm.kopyalandi': 'Copied.', 'tm.geri': 'Back', 'tm.kapat': 'Close',
+      'tm.kisaldi': 'The note did not fit in the code and was shortened. Gmail, Outlook and Copy keep the full text.',
       'tm.tesekkur': 'Thank you. I read every ticket.',
       'tm.konu': 'YazTahta repair ticket: {n}',
       'tm.govde.ne': 'What happened', 'tm.govde.not': 'Note', 'tm.govde.son': 'Herkese Eğitim · YazTahta repair station'
@@ -4637,7 +4637,7 @@ var qrcode = function() {
     '.tamir .bilet h3{margin:0 0 6px}',
     '.tamir .bilet .no{font-family:"DejaVu Sans Mono",monospace;color:var(--tur);font-weight:700;letter-spacing:2px}',
     '.tamir .bilet p{margin:6px 0}',
-    '.tamir a.dugme{display:inline-flex;align-items:center;min-height:48px;padding:8px 16px;border-radius:12px;border:2px solid var(--mor);background:var(--mor);color:#fff;text-decoration:none;font-size:18px}',
+    '.tamir a.dugme{display:inline-flex;align-items:center;min-height:48px;padding:8px 16px;border-radius:12px;border:2px solid var(--murekkep);background:var(--kart);color:var(--murekkep);text-decoration:none;font-size:18px}',
     '.tamir .tren{transition:transform 2.2s cubic-bezier(.2,.7,.2,1)}',
     '.tamir .tren.gel{transform:translateX(0)}',
     '.tamir .tren.git{transition:transform 2.6s cubic-bezier(.6,0,.9,.4);transform:translateX(1150px)}',
@@ -4917,13 +4917,18 @@ var qrcode = function() {
     el.durum = document.createElement('div'); el.durum.className = 'durum'; el.durum.setAttribute('aria-live', 'polite'); alt.appendChild(el.durum);
     var gr = dugme(T('tm.geri'), 'sessiz'); gr.addEventListener('click', formCiz); alt.appendChild(gr);
     var kp = dugme(T('tm.kopyala')); kp.id = 'tamirKopyala'; kp.addEventListener('click', function () { kopyala(r.konu + '\n\n' + r.govde); }); alt.appendChild(kp);
-    var ep = document.createElement('a'); ep.className = 'dugme'; ep.id = 'tamirEposta'; ep.href = mailto(r, r.govde); ep.textContent = T('tm.eposta');
-    ep.addEventListener('click', function () { setTimeout(bitir, 400); }); alt.appendChild(ep);
-    var bt = dugme(T('tm.kapat'), 'birincil'); bt.id = 'tamirBitti'; bt.addEventListener('click', bitir); alt.appendChild(bt);
+    // Bilgisayarda çoğu zaman e-posta programı kurulu değil: web postasında hazır taslak açan bağlantılar
+    var kon = encodeURIComponent(r.konu), gov = encodeURIComponent(r.govde), adr = encodeURIComponent(RAPOR_ADRES);
+    var gm = baglanti(T('tm.gmail'), 'https://mail.google.com/mail/?view=cm&fs=1&to=' + adr + '&su=' + kon + '&body=' + gov); gm.id = 'tamirGmail'; alt.appendChild(gm);
+    var ol = baglanti(T('tm.outlook'), 'https://outlook.office.com/mail/deeplink/compose?to=' + adr + '&subject=' + kon + '&body=' + gov); ol.id = 'tamirOutlook'; alt.appendChild(ol);
+    var ep = baglanti(T('tm.eposta'), mailto(r, r.govde)); ep.id = 'tamirEposta'; ep.removeAttribute('target'); alt.appendChild(ep);
+    [gm, ol, ep].forEach(function (a) { a.addEventListener('click', function () { el.durum.textContent = T('tm.acildi'); bt.textContent = T('tm.gonderdim'); }); });
+    var bt = dugme(T('tm.kapat'), 'birincil'); bt.id = 'tamirBitti'; bt.addEventListener('click', function () { if (bt.textContent === T('tm.gonderdim')) bitir(); else kapat(); }); alt.appendChild(bt);
     bt.focus();
   }
+  function baglanti(metin, href) { var a = document.createElement('a'); a.className = 'dugme ikinci'; a.href = href; a.target = '_blank'; a.rel = 'noopener noreferrer'; a.textContent = metin; return a; }
   function kopyala(metin) {
-    var tamam = function () { el.durum.textContent = T('tm.kopyalandi'); };
+    var tamam = function () { el.durum.textContent = T('tm.kopyalandi'); var b = document.getElementById('tamirBitti'); if (b) b.textContent = T('tm.gonderdim'); };
     try {
       if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(metin).then(tamam, eski); return; }
     } catch (e) { }
