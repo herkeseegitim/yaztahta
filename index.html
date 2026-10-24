@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-tllRiGsHkVa1qZ/G7Y9PYoNuBZcP/6LKGH0imO4T+RY='; style-src 'unsafe-inline'; img-src data:; media-src data:; connect-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-7VgkNTvQGYorqShku3hkv7ASUgD0t+JjAqRGEvgiLEo='; style-src 'unsafe-inline'; img-src data:; media-src data:; connect-src 'none'; base-uri 'none'; form-action 'none'">
 <title>YazTahta</title>
 <style>
 :root{--krem:#FBF6EC;--kart:#FFFDF8;--mor:#5B3E96;--mor-a:#ECE5F7;--tur:#D9631E;--tur-a:#FCE9DB;--sari:#F2C14E;--sari-a:#FBF0CF;--teal:#1F7A75;--teal-a:#DDF0EE;--murekkep:#2B2238;--ikinci:#5A5266;--cizgi:#CFC5B3;--u:44px;--yaz:"DejaVu Sans","Segoe UI","Noto Sans",Arial,sans-serif}
@@ -315,7 +315,7 @@ body.kip-tahta .klavyekap{margin-top:auto}
     <div class="secenekler" id="duzenSecAyar"></div>
     <div class="araclar"><button type="button" class="birincil" id="ayarKapat" data-t="ayar.kapat">Kapat</button></div>
   </div>
-<div class="alt" data-t="alt.metin">YazTahta 0.5 · İnternet gerekmez, hiçbir şey kaydedilmez · Herkese Eğitim · @egitimtek</div>
+<div class="alt" data-t="alt.metin">YazTahta 0.6 · İnternet gerekmez, hiçbir şey kaydedilmez · Herkese Eğitim · @egitimtek</div>
 
 <script>
 /* YazTahta arayüz dili. YT_DIL.t('anahtar', {ad: 'x'}) -> metin. Modüller kendi sözlüğünü YT_DIL.ekle({tr:{...}, en:{...}}) ile ekler.
@@ -377,7 +377,7 @@ var YT_DIL = (function () {
       // Üst çubuk ve alt bilgi
       'ust.yardim': 'Yardım istiyorum', 'ust.yardimGeldi': 'Yardım geldi', 'ust.ayar': 'Ayarlar', 'ust.basa': 'Başa dön',
       'ust.kipLab': 'Bilgisayar başında', 'ust.kipTahta': 'Tahtada sınıfça', 'ust.k12': '1–2. sınıf', 'ust.k34': '3–4. sınıf',
-      'alt.metin': 'YazTahta 0.5 · İnternet gerekmez, hiçbir şey kaydedilmez · Herkese Eğitim · @egitimtek',
+      'alt.metin': 'YazTahta 0.6 · İnternet gerekmez, hiçbir şey kaydedilmez · Herkese Eğitim · @egitimtek',
       'kagit.baslik': 'YazTahta · Türkçe Q klavye',
       // Çalışma ekranı araçları
       'arac.bul': 'Bul bakalım', 'arac.yolculuk': 'Tuşun yolculuğu', 'arac.yapboz': 'Klavye yapbozu', 'arac.deftereDon': 'Deftere dön',
@@ -489,7 +489,7 @@ var YT_DIL = (function () {
       'giris.basla': "Let's start", 'giris.kagit': 'Print the paper keyboard', 'giris.merakli': 'For the curious',
       'ust.yardim': 'I need help', 'ust.yardimGeldi': 'Help is here', 'ust.ayar': 'Settings', 'ust.basa': 'Back to start',
       'ust.kipLab': 'At the computer', 'ust.kipTahta': 'Whole class at the board', 'ust.k12': 'Grades 1–2', 'ust.k34': 'Grades 3–4',
-      'alt.metin': 'YazTahta 0.5 · No internet needed, nothing is saved · Herkese Eğitim · @egitimtek',
+      'alt.metin': 'YazTahta 0.6 · No internet needed, nothing is saved · Herkese Eğitim · @egitimtek',
       'kagit.baslik': 'YazTahta · Turkish Q keyboard',
       'arac.bul': 'Find it', 'arac.yolculuk': "Key's journey", 'arac.yapboz': 'Puzzle', 'arac.deftereDon': 'Back to the notebook',
       'arac.geriSar': 'Rewind 5', 'arac.temizle': 'Clear', 'arac.sonra': 'Later',
@@ -4510,6 +4510,723 @@ var qrcode = function() {
   (window.YT_EKLER = window.YT_EKLER || []).push(EK);
 })();
 
+// Sınıfın treni (yalnız tahta kipi): sınıf bir cümleyi harf harf birlikte yazar, her harf bir vagon olur.
+// Her harften önce herkes kâğıt klavyede parmağını koyar; tahtadaki klavye kısa bir süre bekler, sonra
+// bir öğrenci dokunur. Başka tuşta iz kalmaz, uygulamanın "Bul bakalım" dönüt dili kullanılır.
+// Kayıt yok, öğrenci adı yok, sayaç yok. Kart yazdırılıp panoya asılabilir.
+(function () {
+  'use strict';
+  YT_DIL.ekle({
+    tr: {
+      'sn.dugme': 'Sınıfın treni',
+      'sn.secBaslik': 'Bugün ne oldu? Cümlemizi kuralım.',
+      'sn.secNot': 'Öğretmen tahtadaki tuşlarla ya da klavyeyle yazar. En çok {n} harf.',
+      'sn.yer': 'Sınıfın cümlesi',
+      'sn.soluk': 'Soluk harflerin sesini henüz açmadık. Başka bir sözcük bulabiliriz ya da o harfe öğretmen basar.',
+      'sn.hazir': 'Ya da hazır bir cümle:',
+      'sn.baska': 'Başka cümleler',
+      'sn.basla': 'Bu cümleyle başla',
+      'sn.don': 'Deftere dön',
+      'sn.bos': 'Önce bir cümle yazalım.',
+      'sn.uzun': 'Kısa bir cümle seçelim. En çok {n} harf.',
+      'sn.yazilmaz': '"{ch}" bu klavyede tek dokunuşla yazılmıyor. Başka bir sözcük seçelim.',
+      'sn.siraHarf': 'Sıradaki ses: {h}. Herkes kâğıt klavyede parmağını koysun.',
+      'sn.siraBuyuk': 'Sıradaki: Shift. Büyük {h} için önce Shift. Herkes parmağını koysun.',
+      'sn.siraTus': 'Sıradaki: {ad}. Herkes kâğıt klavyede parmağını koysun.',
+      'sn.siraShiftIsaret': 'Sıradaki: Shift. {ad} için önce Shift. Herkes parmağını koysun.',
+      'sn.shiftOlduIsaret': 'Shift basılı. Şimdi {ad}.',
+      'sn.gosterelim': 'Gösterelim',
+      'sn.simdi': 'Şimdi biri tahtada dokunsun.',
+      'sn.oldu': 'Oldu.',
+      'sn.shiftOldu': 'Shift basılı. Şimdi büyük {h}.',
+      'sn.okuyalim': 'Hep birlikte okuyalım: {s}',
+      'sn.kalan': 'Kalan: {n} vagon',
+      'sn.kalanBir': 'Son vagon',
+      'sn.cikis': 'Trenimiz yola çıktı.',
+      'sn.kartBaslik': 'Sınıfın treni',
+      'sn.kartAlt': '{n} vagon · {tarih}',
+      'sn.yazdir': 'Yazdır',
+      'sn.yeni': 'Yeni cümle'
+    },
+    en: {
+      'sn.dugme': 'Class train',
+      'sn.secBaslik': 'What happened today? Let\'s make our sentence.',
+      'sn.secNot': 'The teacher types it with the keys on the board or with a keyboard. Up to {n} characters.',
+      'sn.yer': 'Our class sentence',
+      'sn.soluk': 'We have not met the faded letters yet. We can find another word, or the teacher presses that letter.',
+      'sn.hazir': 'Or a ready sentence:',
+      'sn.baska': 'Other sentences',
+      'sn.basla': 'Start with this sentence',
+      'sn.don': 'Back to notebook',
+      'sn.bos': 'Let\'s write a sentence first.',
+      'sn.uzun': 'Let\'s pick a shorter sentence. Up to {n} characters.',
+      'sn.yazilmaz': '"{ch}" cannot be typed with one touch on this keyboard. Let\'s pick another word.',
+      'sn.siraHarf': 'Next sound: {h}. Everyone, put a finger on your paper keyboard.',
+      'sn.siraBuyuk': 'Next: Shift. Shift first for a capital {h}. Everyone, put a finger on it.',
+      'sn.siraTus': 'Next: {ad}. Everyone, put a finger on your paper keyboard.',
+      'sn.siraShiftIsaret': 'Next: Shift. Shift first for the {ad}. Everyone, put a finger on it.',
+      'sn.shiftOlduIsaret': 'Shift is on. Now the {ad}.',
+      'sn.gosterelim': 'Show me',
+      'sn.simdi': 'Now one person touches it on the board.',
+      'sn.oldu': 'Done.',
+      'sn.shiftOldu': 'Shift is on. Now a capital {h}.',
+      'sn.okuyalim': 'Let\'s read it together: {s}',
+      'sn.kalan': '{n} cars to go',
+      'sn.kalanBir': 'Last car',
+      'sn.cikis': 'Our train is on its way.',
+      'sn.kartBaslik': 'Class train',
+      'sn.kartAlt': '{n} cars · {tarih}',
+      'sn.yazdir': 'Print',
+      'sn.yeni': 'New sentence'
+    }
+  });
+
+  // Hazır cümleler. 1–2. sınıfta yalnız açılmış seslerle yazılabilenler önerilir (en çok 20 harf);
+  // aile bireyi sözcüğü yok (Dersler.md). Cümle başı büyük harf, sonda nokta: 2. sınıf yazım kuralı.
+  var HAZIR = {
+    tr12: ['Kek al.', 'Lale ile tel al.', 'Tek kalan tilki.', 'Tren kalkar.', 'Mor kalem.', 'Kim kalem alır.', 'Yel esti.', 'Mor yumak.',
+      'Sular soğuk.', 'Deniz derin.', 'Bugün güzel.', 'Biz bir takımız.', 'Kuşlar uçuyor.', 'Hava güneşli.', 'Ağaçta kuş var.', 'Sınıfça yazdık.', 'Top yuvarlandı.'],
+    tr34: ['Bugün hava çok güzel.', 'Kalemimi masaya koydum.', 'Teneffüste ip atladık.', 'Kuşlar ağaçta ötüyor.', 'Hangi tuş boşluk açar?',
+      'Bahçede yeni çiçekler açtı.', 'Sınıfça bir tren yaptık.', 'Yağmur yağınca su birikti.', 'Kitabımı çantama koydum.', 'Bu hafta resim yaptık.', 'Kar yağdı mı?'],
+    en12: ['A cat sat.', 'I can hop.', 'Pat a dog.', 'The sun is up.', 'We like red.', 'Fix the box.', 'Sit in the tent.'],
+    en34: ['We read a good book.', 'The rain stopped at noon.', 'Can you see the bird?', 'Our class made a train.', 'My pencil is on the desk.', 'The leaves are falling.']
+  };
+  var JOLLY = 's a t i p n c k e h r m d g o u l f b j z w v y x q'.split(' ');
+  // İşaretin kendi adı (tuşun adı başka olabilir: Türkçe Q'da ? yıldız tuşunda)
+  var ISARET = {
+    tr: { '.': 'nokta', ',': 'virgül', '?': 'soru işareti', '!': 'ünlem', ':': 'iki nokta', ';': 'noktalı virgül', '\'': 'kesme işareti', '"': 'tırnak', '-': 'kısa çizgi' },
+    en: { '.': 'full stop', ',': 'comma', '?': 'question mark', '!': 'exclamation mark', ':': 'colon', ';': 'semicolon', '\'': 'apostrophe', '"': 'quotation mark', '-': 'hyphen' }
+  };
+  function isaretAd(ch, code) { var a = (ISARET[dil()] || ISARET.tr)[ch]; if (a) return a; var k = H().kod[code]; return k ? k.ad : ch; }
+
+  var api = null, ek = null, acik = false;
+  var durum = 'kapali';             // sec | bekle | goster | bitti
+  var cumle = '', adimlar = [], ai = 0, iska = 0, kilit = false, secShift = false;
+  var zaman = null, zaman2 = null, hazirSira = 0, sonTus = { c: null, t: 0 };
+  var BEKLE = 5000;                 // Bul bakalım ile aynı düşünme süresi
+  var el = {};
+
+  function t(k, v) { return YT_DIL.t('sn.' + k, v); }
+  function dil() { return YT_DIL.dil || 'tr'; }
+  function H() { return YT_HARITA; }
+  function k12() { return api.ayar.kademe === '12'; }
+  function tahta() { return api.ayar.kip === 'tahta'; }
+  function maks() { return k12() ? 20 : 32; }
+  function kucuk(c) { return H().kucuk ? H().kucuk(String(c)) : String(c).toLowerCase(); }
+  function buyukH(c) { return H().buyuk ? H().buyuk(String(c)) : String(c).toUpperCase(); }
+  function yap(tag, cls, metin) { var e = document.createElement(tag); if (cls) e.className = cls; if (metin != null) e.textContent = metin; return e; }
+  function hareketYok() { return api.hareketYok(); }
+  // Seslendirme: yalnız gömülü kayıtta olan parçalar söylenir (tuş ve harf adları); yeni cümleler ekranda kalır,
+  // öğretmen sesli okur. Kayıtta olmayan metin sistem sesine düşer, ses kimliği karışmasın.
+  function adSes(code) {
+    var k = H().kod[code]; if (!k) return '';
+    if (k.g === 'harf') return k.t;
+    if (code !== 'Space' && code !== 'ShiftLeft' && code !== 'ShiftRight' && k.g !== 'isaret') return '';
+    var ad = H().ilkBuyuk ? H().ilkBuyuk(k.ad) : k.ad;
+    return ad + '.';
+  }
+  function zamanIptal() { clearTimeout(zaman); clearTimeout(zaman2); zaman = zaman2 = null; }
+
+  function harfSirasi() { return dil() === 'en' ? JOLLY : (H().maarif || []); }
+  function acikHarfler() { var m = harfSirasi(), i = m.indexOf(api.ayar.sonSes); return i < 0 ? m.slice() : m.slice(0, i + 1); }
+  function harfMi(c) { var k = H().kod[H().harften[kucuk(c)]]; return !!(k && k.g === 'harf'); }
+  function acikMi(c) { if (!k12() || !harfMi(c)) return true; return acikHarfler().indexOf(kucuk(c)) >= 0; }
+
+  // Karakterin tuşu ve Shift gerekip gerekmediği. AltGr gerektiren karakter (ör. @) trende yok.
+  function tusBul(ch) {
+    if (ch === ' ') return { code: 'Space', shift: false };
+    var low = kucuk(ch), code = H().harften[ch] || H().harften[low], k = code && H().kod[code];
+    if (!k || !k.t) return null;
+    if (k.g === 'harf') { if (kucuk(k.t) !== low) return null; return { code: code, shift: ch !== low }; }
+    if (k.t === ch) return { code: code, shift: false };
+    if (k.s === ch) return { code: code, shift: true };
+    return null;
+  }
+  function adimCikar(s) {
+    var out = [];
+    for (var i = 0; i < s.length; i++) {
+      var ch = s[i], b = tusBul(ch);
+      if (!b) continue;
+      if (b.shift) out.push({ tip: 'shift', code: 'ShiftLeft', ch: ch, idx: i });
+      out.push({ tip: ch === ' ' ? 'bosluk' : (harfMi(ch) ? 'harf' : 'isaret'), code: b.code, ch: ch, idx: i });
+    }
+    return out;
+  }
+  function hazirlar() {
+    var liste = HAZIR[(dil() === 'en' ? 'en' : 'tr') + (k12() ? '12' : '34')] || [];
+    return liste.filter(function (s) {
+      if (s.length > maks()) return false;
+      for (var i = 0; i < s.length; i++) if (!tusBul(s[i]) || !acikMi(s[i])) return false;
+      return true;
+    });
+  }
+
+  // ---------- Sahne ----------
+  function sahneKur() {
+    var s = yap('section', 'sn-sahne gizli'); s.id = 'snSahne'; s.setAttribute('aria-label', t('dugme'));
+    var ust = yap('div', 'sn-ust');
+    el.soru = yap('div', 'sn-soru'); el.soru.id = 'snSoru'; el.soru.setAttribute('aria-live', 'polite'); ust.appendChild(el.soru);
+    var db = yap('div', 'sn-dugmeler'); el.ustD = db;
+    el.kalan = yap('span', 'sn-kalan'); el.kalan.id = 'snKalan'; db.appendChild(el.kalan);
+    el.bGoster = yap('button', 'birincil', t('gosterelim')); el.bGoster.type = 'button'; el.bGoster.id = 'snGoster';
+    el.bGoster.addEventListener('click', function () { goster(); }); db.appendChild(el.bGoster);
+    el.bDon = yap('button', 'sessiz', t('don')); el.bDon.type = 'button'; el.bDon.id = 'snDon';
+    el.bDon.addEventListener('click', function () { kapat(); }); db.appendChild(el.bDon);
+    ust.appendChild(db); s.appendChild(ust);
+    el.donut = yap('div', 'sn-donut'); el.donut.id = 'snDonut'; el.donut.setAttribute('aria-live', 'polite'); s.appendChild(el.donut);
+
+    var g = yap('div', 'sn-govde');
+    // Cümle seçimi
+    el.sec = yap('div', 'sn-sec'); el.sec.id = 'snSec';
+    el.secNot = yap('p', 'sn-secnot');
+    el.gir = document.createElement('input'); el.gir.type = 'text'; el.gir.id = 'snGir'; el.gir.setAttribute('autocomplete', 'off'); el.gir.setAttribute('spellcheck', 'false');
+    el.gir.addEventListener('keydown', function (e) {
+      e.stopPropagation(); // ana uygulamanın tuş işleyicisine gitmez
+      if (e.key === 'Enter') { e.preventDefault(); basla(); return; }
+      if (e.key === 'Escape') { e.preventDefault(); kapat(); return; }
+      if (e.key && e.key.length === 1 && !e.ctrlKey && !e.metaKey) { e.preventDefault(); kutuyaYaz(e.key); }
+    });
+    el.gir.addEventListener('input', girdi);
+    el.gir.addEventListener('paste', function (e) { var m = (e.clipboardData && e.clipboardData.getData('text')) || ''; if ((el.gir.value || '').length + m.length > maks()) { e.preventDefault(); el.secDonut.textContent = t('uzun', { n: maks() }); } });
+    el.gir.addEventListener('scroll', function () { el.ayna.scrollLeft = el.gir.scrollLeft; });
+    el.ayna = yap('div', 'sn-ayna'); el.ayna.setAttribute('aria-hidden', 'true');
+    var gk = yap('div', 'sn-girkap'); gk.appendChild(el.gir); gk.appendChild(el.ayna);
+    el.secSoluk = yap('p', 'sn-secsoluk');
+    el.secDonut = yap('p', 'sn-secdonut'); el.secDonut.setAttribute('aria-live', 'polite');
+    var bs = yap('div', 'sn-secalt');
+    el.bBasla = yap('button', 'birincil', t('basla')); el.bBasla.type = 'button'; el.bBasla.id = 'snBasla'; el.bBasla.addEventListener('click', basla); bs.appendChild(el.bBasla);
+    el.hazirEt = yap('span', 'sn-haziret'); bs.appendChild(el.hazirEt);
+    el.hazir = yap('div', 'sn-hazir'); el.hazir.id = 'snHazir'; bs.appendChild(el.hazir);
+    el.bBaska = yap('button', 'sessiz', t('baska')); el.bBaska.type = 'button'; el.bBaska.id = 'snBaska'; el.bBaska.addEventListener('click', function () { hazirSira += 3; hazirCiz(); }); bs.appendChild(el.bBaska);
+    [el.secNot, gk, el.secSoluk, el.secDonut, bs].forEach(function (x) { el.sec.appendChild(x); });
+    g.appendChild(el.sec);
+    // Tren
+    el.ray = yap('div', 'sn-ray gizli'); el.ray.id = 'snRay'; el.ray.setAttribute('role', 'img');
+    el.hatlar = yap('div', 'sn-hatlar'); el.ray.appendChild(el.hatlar);
+    g.appendChild(el.ray);
+    // Kart
+    el.kart = yap('div', 'sn-kart gizli'); el.kart.id = 'snKart';
+    el.kartBaslik = yap('p', 'sn-kartbaslik'); el.kartTren = yap('div', 'sn-karttren'); el.kartAlt = yap('p', 'sn-kartalt');
+    var kb = yap('div', 'sn-kartdugme gizli'); el.kb = kb;
+    el.bYazdir = yap('button', 'birincil', t('yazdir')); el.bYazdir.type = 'button'; el.bYazdir.id = 'snYazdir'; el.bYazdir.addEventListener('click', yazdir); kb.appendChild(el.bYazdir);
+    el.bYeni = yap('button', '', t('yeni')); el.bYeni.type = 'button'; el.bYeni.id = 'snYeni'; el.bYeni.addEventListener('click', function () { secAc(); }); kb.appendChild(el.bYeni);
+    [el.kartBaslik, el.kartTren, el.kartAlt, kb].forEach(function (x) { el.kart.appendChild(x); });
+    g.appendChild(el.kart);
+    s.appendChild(g);
+    el.sahne = s;
+    api.$('ana').insertBefore(s, api.$('klavyeKap'));
+    // Yazdırma sayfası (yalnız baskıda görünür)
+    el.baski = yap('div', 'sn-baski'); el.baski.id = 'snBaski'; el.baski.setAttribute('aria-hidden', 'true');
+    document.body.appendChild(el.baski);
+  }
+  function metinleriYaz() {
+    el.sahne.setAttribute('aria-label', t('dugme'));
+    el.bGoster.textContent = t('gosterelim'); el.bDon.textContent = t('don');
+    el.bBasla.textContent = t('basla'); el.bBaska.textContent = t('baska'); el.bYazdir.textContent = t('yazdir'); el.bYeni.textContent = t('yeni');
+    el.gir.setAttribute('placeholder', t('yer')); el.gir.setAttribute('aria-label', t('yer'));
+    if (el.acYazi) el.acYazi.textContent = t('dugme');
+  }
+  function goster1(e, gorun) { e.classList.toggle('gizli', !gorun); }
+
+  // Tahtada sahne klavyeyle arasındaki boşluğu doldurur
+  // Sahne, klavye ekranın altında tam görünecek kadar yer bırakarak kalan alanı doldurur (sayfa kaymaz)
+  function sahneBuyut() {
+    if (!acik) return;
+    el.sahne.style.height = '160px';
+    var kk = api.$('klavyeKap').getBoundingClientRect(), sr = el.sahne.getBoundingClientRect();
+    var h = 160 + (kk.top - sr.bottom - 12);
+    var tasma = document.documentElement.scrollHeight - window.innerHeight;
+    if (tasma > 0) h = Math.min(h, 160 - tasma);
+    el.sahne.style.height = Math.max(120, Math.floor(h)) + 'px';
+    var ust = el.sahne.querySelector('.sn-ust');
+    // Çok alçak ekranda dönüt satırı yönergenin yanına çıkar, ray yer kazanır
+    var cokdarYap = function (on) {
+      el.sahne.classList.toggle('cokdar', on);
+      if (on) { if (el.donut.parentNode !== ust) ust.insertBefore(el.donut, el.ustD); }
+      else if (el.donut.parentNode === ust) el.sahne.insertBefore(el.donut, ust.nextSibling);
+    };
+    var tasiyor = function () { return el.sec.scrollHeight > el.sec.clientHeight + 1 || el.sahne.scrollHeight > el.sahne.clientHeight + 1; };
+    el.sahne.classList.toggle('dar', h < 300);
+    cokdarYap(h < 190);
+    // İçerik sahneye sığmıyorsa (uzun yönerge, iki satıra inen düğmeler) bir kademe daha sıkıştır
+    if (!el.sahne.classList.contains('dar') && tasiyor()) el.sahne.classList.add('dar');
+    if (!el.sahne.classList.contains('cokdar') && tasiyor()) cokdarYap(true);
+    if (durum === 'bekle' || durum === 'goster') rayBoyu();
+    if (durum === 'bitti' && !el.kart.classList.contains('gizli')) kartGoster();
+  }
+
+  function ac() {
+    if (acik || !tahta()) return;
+    var b = document.body.classList;
+    if (b.contains('yap-acik') || b.contains('yol-acik') || b.contains('sz-acik')) return;
+    acik = true;
+    b.add('sn-acik');
+    el.sahne.classList.remove('gizli');
+    api.ac(ek);
+    metinleriYaz();
+    secAc();
+    setTimeout(sahneBuyut, 60); setTimeout(sahneBuyut, 250);
+  }
+  function kapat() {
+    if (!acik) return;
+    acik = false; zamanIptal(); durum = 'kapali';
+    el.sahne.classList.add('gizli'); el.sahne.style.height = '';
+    document.body.classList.remove('sn-acik');
+    klavyeBekle(false); isaretTemizle();
+    api.kapat(ek);
+    api.klavyeCiz();
+  }
+
+  // ---------- Cümle seçimi ----------
+  function secAc() {
+    zamanIptal(); durum = 'sec'; secShift = false; isaretTemizle(); klavyeBekle(false);
+    goster1(el.sec, true); goster1(el.ray, false); goster1(el.kart, false);
+    el.ray.classList.remove('sn-cik');
+    goster1(el.bGoster, false); el.kalan.textContent = ''; goster1(el.kb, false);
+    el.soru.textContent = t('secBaslik'); el.donut.textContent = ''; el.donut.className = 'sn-donut';
+    el.secNot.textContent = t('secNot', { n: maks() });
+    el.gir.maxLength = maks(); el.gir.value = '';
+    el.hazirEt.textContent = t('hazir');
+    hazirCiz(); girdi();
+    setTimeout(sahneBuyut, 0);
+    try { el.gir.focus(); } catch (e) { }
+  }
+  function hazirCiz() {
+    var l = hazirlar(); el.hazir.textContent = '';
+    goster1(el.hazirEt, l.length > 0); goster1(el.bBaska, l.length > 3);
+    if (!l.length) return;
+    for (var i = 0; i < Math.min(3, l.length); i++) {
+      var s = l[(hazirSira + i) % l.length];
+      var b = yap('button', 'sn-hazircumle', s); b.type = 'button';
+      b.addEventListener('click', (function (s) { return function () { el.gir.value = s; girdi(); }; })(s));
+      el.hazir.appendChild(b);
+    }
+  }
+  function girdi() {
+    var v = el.gir.value || '', soluk = false;
+    el.secDonut.textContent = v.length >= maks() ? t('uzun', { n: maks() }) : '';
+    el.ayna.textContent = '';
+    for (var i = 0; i < v.length; i++) {
+      var sp = yap('span', '', v[i]);
+      if (!acikMi(v[i])) { sp.className = 'sn-soluk'; soluk = true; }
+      el.ayna.appendChild(sp);
+    }
+    el.ayna.scrollLeft = el.gir.scrollLeft;
+    el.secSoluk.textContent = soluk ? t('soluk') : '';
+  }
+  function kutuyaYaz(metin) {
+    var g = el.gir, a = g.selectionStart, b = g.selectionEnd, v = g.value || '';
+    if (a == null) { a = b = v.length; }
+    if (v.length - (b - a) + metin.length > maks()) { el.secDonut.textContent = t('uzun', { n: maks() }); return; }
+    g.value = v.slice(0, a) + metin + v.slice(b);
+    try { g.setSelectionRange(a + metin.length, a + metin.length); } catch (e) { }
+    girdi();
+  }
+  // Tahtadaki tuşlarla yazma (ekran klavyesine gerek yok; Türkçe harf ve Shift uygulamanın haritasıyla)
+  function secTus(code, key) {
+    var g = el.gir, v = g.value || '', k = H().kod[code];
+    api.basGoster(code);
+    if (code === 'Backspace') { g.value = v.slice(0, -1); girdi(); return; }
+    if (code === 'ShiftLeft' || code === 'ShiftRight') { secShift = !secShift; shiftIsaret(secShift); return; }
+    if (code === 'Enter' || code === 'NumpadEnter') { basla(); return; }
+    if (code === 'Space') { kutuyaYaz(' '); return; }
+    if (key && key.length === 1) { kutuyaYaz(key); return; }
+    if (k && k.t && (k.g === 'harf' || k.g === 'rakam' || k.g === 'isaret')) {
+      var ch = secShift ? (k.g === 'harf' ? buyukH(k.t) : (k.s || k.t)) : k.t;
+      if (secShift) { secShift = false; shiftIsaret(false); }
+      kutuyaYaz(ch);
+    }
+  }
+  function shiftIsaret(ac1) {
+    var e = document.querySelectorAll('#klavye .tus[data-code="ShiftLeft"],#klavye .tus[data-code="ShiftRight"]');
+    for (var i = 0; i < e.length; i++) e[i].classList.toggle('sn-shift', ac1);
+  }
+  function basla() {
+    var v = (el.gir.value || '').replace(/\s+/g, ' ').replace(/^ | $/g, '');
+    if (!v) { el.secDonut.textContent = t('bos'); return; }
+    if (v.length > maks()) { el.secDonut.textContent = t('uzun', { n: maks() }); return; }
+    for (var i = 0; i < v.length; i++) if (!tusBul(v[i])) { el.secDonut.textContent = t('yazilmaz', { ch: v[i] }); return; }
+    secShift = false; shiftIsaret(false);
+    cumle = v; adimlar = adimCikar(v); ai = 0;
+    goster1(el.sec, false); goster1(el.ray, true); goster1(el.kart, false); goster1(el.kb, false);
+    try { el.gir.blur(); } catch (e) { }
+    rayCiz();
+    zaman = setTimeout(function () { rayBoyu(); siradaki(); }, 30);
+  }
+
+  // ---------- Tren ----------
+  // Cümle rayda kesik çizgili boş vagonlar olarak durur; doğru tuşla vagon dolar. Uzun cümle ortaya en yakın boşluktan iki raya bölünür.
+  function satirlar() {
+    var s = cumle, sinir = k12() ? 12 : 18;
+    if (el.sahne && el.sahne.classList.contains('cokdar')) return [[0, s.length]]; // çok alçak ekranda tek ray
+    if (s.length <= sinir) return [[0, s.length]];
+    // Kısa cümle iki raya ortaya en yakın boşluktan; uzun sözcük raya sığmazsa sözcük içinden bölünür
+    var orta = s.length / 2, en = -1, i;
+    for (i = 0; i < s.length; i++) if (s[i] === ' ' && (en < 0 || Math.abs(i - orta) < Math.abs(en - orta))) en = i;
+    if (en > 0 && en <= sinir + 2 && s.length - en - 1 <= sinir + 2) return [[0, en], [en + 1, s.length]];
+    var out = [], bas = 0;
+    while (bas < s.length) {
+      var son = Math.min(s.length, bas + sinir);
+      if (son < s.length) { var b = s.lastIndexOf(' ', son); if (b > bas) son = b; }
+      out.push([bas, son]);
+      bas = son; while (s[bas] === ' ') bas++;
+    }
+    return out;
+  }
+  function vagonEl(i) { return el.hatlar.querySelector('.vagon[data-i="' + i + '"]'); }
+  function rayCiz() {
+    el.hatlar.textContent = ''; el.ray.classList.remove('sn-cik');
+    el.ray.setAttribute('aria-label', cumle);
+    var st = satirlar();
+    st.forEach(function (r, si) {
+      var hat = yap('div', 'hat sn-hat'), ic = yap('div', 'hatic sn-hatic'); hat.appendChild(ic);
+      for (var i = r[0]; i < r[1]; i++) {
+        var ch = cumle[i], v = yap('span', 'vagon sn-hayalet');
+        v.setAttribute('data-i', i);
+        if (ch === ' ') v.classList.add('bos'); else v.textContent = ch;
+        if (ch !== ' ' && harfMi(ch) && ch !== kucuk(ch)) v.classList.add('buyuk');
+        if (!acikMi(ch)) v.classList.add('sn-solukv');
+        ic.appendChild(v);
+      }
+      if (si === st.length - 1) ic.appendChild(lokoEl());
+      el.hatlar.appendChild(hat);
+    });
+  }
+  var LOKO = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 48" aria-hidden="true"><rect x="2" y="16" width="44" height="22" rx="5" fill="#D9631E" stroke="#2B2238" stroke-width="3"/><rect x="30" y="4" width="18" height="20" rx="3" fill="#D9631E" stroke="#2B2238" stroke-width="3"/><rect x="34" y="8" width="10" height="9" rx="2" fill="#FFFDF8"/><rect x="8" y="6" width="8" height="12" fill="#2B2238"/><circle class="far" cx="58" cy="28" r="4" fill="#FBF0CF" stroke="#2B2238" stroke-width="2"/><circle cx="14" cy="40" r="6" fill="#2B2238"/><circle cx="36" cy="40" r="6" fill="#2B2238"/></svg>';
+  function lokoEl() {
+    var l = yap('span', 'loko sn-loko');
+    l.appendChild(document.importNode(new DOMParser().parseFromString(LOKO, 'image/svg+xml').documentElement, true));
+    return l;
+  }
+  // Yazı boyu: 1080 yükseklikte 80 px'e kadar; en uzun ray sığacak kadar küçülür (en az 30 px)
+  function rayBoyu() {
+    if (!el.ray || el.ray.classList.contains('gizli')) return;
+    var w = el.ray.clientWidth - 24, h = el.ray.clientHeight - 12;
+    var st = satirlar(), enUzun = 0;
+    st.forEach(function (r) { enUzun = Math.max(enUzun, r[1] - r[0]); });
+    var fs = Math.floor(Math.min(80, w / (enUzun * 1.34 + 2.6), h / (st.length * 2.6)));
+    el.hatlar.style.fontSize = Math.max(16, fs) + 'px';
+  }
+  function kalanSay() { var n = 0; for (var i = ai; i < adimlar.length; i++) if (adimlar[i].tip !== 'shift' && adimlar[i].tip !== 'bosluk') n++; return n; }
+  function adimYazi(a) {
+    if (a.tip === 'shift') return harfMi(a.ch) ? t('siraBuyuk', { h: a.ch }) : t('siraShiftIsaret', { ad: dil() === 'en' ? isaretAd(a.ch) : bas1(isaretAd(a.ch)) });
+    if (a.tip === 'harf') return t('siraHarf', { h: a.ch });
+    if (a.tip === 'bosluk') { var k = H().kod.Space; return t('siraTus', { ad: k ? k.ad : ' ' }); }
+    return t('siraTus', { ad: isaretAd(a.ch, a.code) });
+  }
+  function bas1(m) { return m ? buyukH(m.charAt(0)) + m.slice(1) : m; }
+  // Söylenecek ad: işaret tuşun kendi karakteri değilse (ör. ? yıldız tuşunda) tuş adı söylenmez, yanıltmasın
+  function adimSes(a) {
+    if (a.tip === 'shift') return adSes('ShiftLeft');
+    if (a.tip === 'isaret') { var k = H().kod[a.code]; if (!k || k.t !== a.ch) return ''; }
+    return adSes(a.code);
+  }
+  function siradaki() {
+    if (!acik) return;
+    zamanIptal(); isaretTemizle();
+    var a = adimlar[ai];
+    if (!a) { bitir(); return; }
+    durum = 'bekle'; kilit = false; iska = 0;
+    var e = el.hatlar.querySelectorAll('.vagon.sn-sirada,.vagon.sn-shiftv');
+    for (var i = 0; i < e.length; i++) e[i].classList.remove('sn-sirada', 'sn-shiftv');
+    var v = vagonEl(a.idx); if (v) v.classList.add(a.tip === 'shift' ? 'sn-shiftv' : 'sn-sirada');
+    var n = kalanSay(); el.kalan.textContent = n === 1 ? t('kalanBir') : t('kalan', { n: n });
+    var m = adimYazi(a);
+    el.soru.textContent = m; el.donut.textContent = ''; el.donut.className = 'sn-donut';
+    goster1(el.bGoster, true);
+    klavyeBekle(true);
+    api.soyle(adimSes(a));
+    zaman = setTimeout(goster, BEKLE);
+  }
+  function goster() {
+    if (!acik || durum !== 'bekle') return;
+    clearTimeout(zaman); zaman = null;
+    durum = 'goster'; klavyeBekle(false); goster1(el.bGoster, false);
+    el.donut.textContent = t('simdi'); el.donut.className = 'sn-donut';
+    rayBoyu();
+  }
+  function klavyeBekle(b) { var k = api.$('klavye'); if (k) k.classList.toggle('sn-bekle', !!b); }
+  var isaretKod = null, shiftAcik = false;
+  function isaretYenile() { if (isaretKod) { var te = document.querySelector('#klavye .tus[data-code="' + isaretKod + '"]'); if (te) te.classList.add('sn-isaret'); } if (shiftAcik) shiftIsaret(true); if (durum === 'bekle') klavyeBekle(true); }
+  function isaretTemizle() { isaretKod = null; shiftAcik = false; var e = document.querySelectorAll('#klavye .tus.sn-isaret'); for (var i = 0; i < e.length; i++) e[i].classList.remove('sn-isaret'); shiftIsaret(false); }
+  function dene(code) {
+    var a = adimlar[ai]; if (!a || kilit) return;
+    api.basGoster(code);
+    var dogru = a.tip === 'shift' ? (code === 'ShiftLeft' || code === 'ShiftRight') : code === a.code;
+    if (dogru) {
+      kilit = true; iska = 0; isaretTemizle();
+      var v = vagonEl(a.idx);
+      if (a.tip === 'shift') {
+        if (v) { v.classList.remove('sn-shiftv'); v.classList.add('sn-sirada'); }
+        shiftIsaret(true); shiftAcik = true;
+        el.donut.textContent = harfMi(a.ch) ? t('shiftOldu', { h: a.ch }) : t('shiftOlduIsaret', { ad: isaretAd(a.ch) }); el.donut.className = 'sn-donut iyi';
+        ai++;
+        // Shift'ten sonra harf için yeniden bekleme yok: aynı vagon, sıradaki dokunuş
+        zaman2 = setTimeout(function () { if (!acik) return; kilit = false; var b = adimlar[ai]; el.soru.textContent = adimYazi(b); el.kalan.textContent = kalanSay() === 1 ? t('kalanBir') : t('kalan', { n: kalanSay() }); }, 500);
+        return;
+      }
+      if (v) { v.classList.remove('sn-hayalet', 'sn-sirada', 'sn-shiftv', 'sn-solukv'); v.classList.add('sn-dolu'); if (!hareketYok()) v.classList.add('yeni'); }
+      api.trenSesi('yaz');
+      el.donut.textContent = t('oldu'); el.donut.className = 'sn-donut iyi';
+      ai++;
+      var son = ai >= adimlar.length;
+      var sozcukBitti = a.tip !== 'bosluk' && (a.idx === cumle.length - 1 || cumle[a.idx + 1] === ' ');
+      if (son) { zaman2 = setTimeout(bitir, 700); return; }
+      if (sozcukBitti) {
+        var bas = cumle.lastIndexOf(' ', a.idx) + 1, soz = cumle.slice(bas, a.idx + 1).replace(/[.,?!;:]+$/, '');
+        if (!/[^.,?!;:'"\-]/.test(soz)) { zaman2 = setTimeout(siradaki, 900); return; }
+        zaman2 = setTimeout(function () { if (!acik) return; var m = t('okuyalim', { s: soz }); el.donut.textContent = m; el.donut.className = 'sn-donut iyi'; zaman2 = setTimeout(siradaki, 2400); }, 600);
+        return;
+      }
+      zaman2 = setTimeout(siradaki, 900);
+      return;
+    }
+    // Başka tuş: vagon oluşmaz, iz kalmaz. Dönüt tuşa söylenir, çocuğa değil (Bul bakalım dili).
+    iska++;
+    var hedef = a.tip === 'shift' ? 'ShiftLeft' : a.code, hk = H().kod[hedef], m;
+    if (iska >= 2 && hk && H().kod[code]) m = YT_DIL.t('bul.yer', { ad: api.tusCumle(code), tur: YT_DIL.t(hk.g === 'harf' ? 'bul.turHarf' : 'bul.turTus'), tarif: api.tarif(code, hedef) });
+    else m = YT_DIL.t('bul.baskaYer', { ad: H().kod[code] ? api.tusCumle(code) : code });
+    el.donut.textContent = m; el.donut.className = 'sn-donut';
+    api.soyle(adSes(code));
+    if (iska >= 3) { isaretKod = hedef; isaretYenile(); }
+    // Kalabalıkta ikinci bir el aynı anda dokunursa sayılmasın
+    kilit = true; zaman2 = setTimeout(function () { kilit = false; }, 700);
+  }
+  function bitir() {
+    if (!acik) return;
+    zamanIptal(); durum = 'bitti'; klavyeBekle(false); isaretTemizle(); goster1(el.bGoster, false);
+    el.kalan.textContent = '';
+    el.soru.textContent = cumle;
+    el.donut.textContent = t('cikis'); el.donut.className = 'sn-donut iyi';
+    api.trenSesi('tamam');
+    if (!hareketYok()) el.ray.classList.add('sn-cik');
+    zaman = setTimeout(kartGoster, hareketYok() ? 600 : 2400);
+  }
+  function vagonSay() { var n = 0; for (var i = 0; i < cumle.length; i++) if (cumle[i] !== ' ') n++; return n; }
+  function tarih() { try { return new Date().toLocaleDateString(dil() === 'en' ? 'en-GB' : 'tr-TR', { day: 'numeric', month: 'long', year: 'numeric' }); } catch (e) { return new Date().toDateString(); } }
+  function trenKopya(hedef, tekSatir) {
+    hedef.textContent = '';
+    var st = tekSatir ? [[0, cumle.length]] : satirlar();
+    st.forEach(function (r) {
+      var hat = yap('div', 'sn-khat');
+      for (var i = r[0]; i < r[1]; i++) {
+        var ch = cumle[i], v = yap('span', 'sn-kvagon');
+        if (ch === ' ') v.classList.add('bos'); else v.textContent = ch;
+        hat.appendChild(v);
+      }
+      hedef.appendChild(hat);
+    });
+  }
+  function kartGoster() {
+    if (!acik) return;
+    goster1(el.ray, false); goster1(el.kart, true); el.ray.classList.remove('sn-cik');
+    // Kart düğmeleri üst satırda (kart ne kadar uzun olursa olsun klavyenin altında kalmazlar)
+    el.ustD.insertBefore(el.kb, el.bDon);
+    goster1(el.kb, true);
+    el.kartBaslik.textContent = t('kartBaslik');
+    var dar = el.sahne.classList.contains('dar');
+    trenKopya(el.kartTren, dar);
+    if (dar) { el.donut.textContent = ''; }
+    el.kartAlt.textContent = t('kartAlt', { n: vagonSay(), tarih: tarih() });
+    el.soru.textContent = t('kartBaslik');
+    var enUzun = 1; satirlar().forEach(function (r) { enUzun = Math.max(enUzun, r[1] - r[0]); });
+    el.kartTren.style.fontSize = ''; var fs0 = parseFloat(getComputedStyle(el.kartTren).fontSize) || 44;
+    if (dar) enUzun = cumle.length;
+    var sat = dar ? 1 : satirlar().length;
+    var bos = el.kart.clientHeight - 24 - (dar ? 0 : el.kartBaslik.offsetHeight + el.kartAlt.offsetHeight + 24);
+    var yuk = Math.floor(bos / (sat * 1.45 + (sat - 1) * 0.35));
+    var gen = el.kart.clientWidth - 40 - (dar ? el.kartAlt.offsetWidth + 20 : 0);
+    el.kartTren.style.fontSize = Math.max(12, Math.min(fs0, yuk, Math.floor(gen / (enUzun * 1.34 + 0.5)))) + 'px';
+    try { el.bYazdir.focus(); } catch (e) { }
+  }
+  function yazdir() {
+    el.baski.textContent = '';
+    var b = yap('p', 'sn-bbaslik', t('kartBaslik')); el.baski.appendChild(b);
+    // Panoya: sözcükler bölünmeden satıra dizilir; yazı boyu en uzun sözcüğe göre (A4 dikey, en çok 22 mm)
+    var tr1 = yap('div', 'sn-btren'), soz = cumle.split(' '), enUzun = 1;
+    soz.forEach(function (w) { enUzun = Math.max(enUzun, w.length); });
+    tr1.style.fontSize = Math.min(22, Math.floor(170 / (enUzun * 1.3 + 0.4))) + 'mm';
+    soz.forEach(function (w) {
+      var k = yap('span', 'sn-bsoz');
+      for (var i = 0; i < w.length; i++) k.appendChild(yap('span', 'sn-kvagon', w[i]));
+      tr1.appendChild(k);
+    });
+    el.baski.appendChild(tr1);
+    el.baski.appendChild(yap('p', 'sn-balt', t('kartAlt', { n: vagonSay(), tarih: tarih() })));
+    document.body.classList.add('sn-baskida');
+    var bitti = false;
+    function temizle() { if (bitti) return; bitti = true; document.body.classList.remove('sn-baskida'); window.removeEventListener('afterprint', temizle); }
+    window.addEventListener('afterprint', temizle);
+    setTimeout(function () { try { window.print(); } catch (e) { } setTimeout(temizle, 1500); }, 50);
+  }
+
+  var CSS = [
+    'body.sn-acik #yonerge,body.sn-acik .ustsatir,body.sn-acik #defterKap,body.sn-acik #raf,body.sn-acik #yolculuk{display:none!important}',
+    'body.sn-acik #szAc,body.sz-acik #snAc,body.yap-acik #snAc,body.yol-acik #snAc{display:none!important}',
+    '#snAc{display:inline-flex;align-items:center;gap:8px}#snAc svg{width:30px;height:24px;flex:none}',
+    '.sn-sahne{display:flex;flex-direction:column;gap:10px;height:160px;min-height:0}',
+    '.sn-ust{display:flex;align-items:center;gap:12px;flex-wrap:wrap}',
+    '.sn-soru{flex:1 1 420px;font-size:32px;font-weight:700;line-height:1.2}',
+    '.sn-dugmeler{display:flex;gap:10px;align-items:center;flex-wrap:wrap}',
+    '.sn-dugmeler button,.sn-sec button,.sn-kart button{min-height:64px;font-size:24px;padding:8px 22px}',
+    '.sn-kalan{font-size:24px;color:#5A5266;font-weight:700;white-space:nowrap}',
+    '.sn-donut{font-size:28px;min-height:38px;color:#2B2238}',
+    '.sn-donut.iyi{color:#0E4A47;font-weight:700}',
+    '.sn-govde{flex:1;min-height:0;display:flex;padding-right:12px}',
+    '.sn-sec{flex:1;min-width:0;display:flex;flex-direction:column;gap:12px;justify-content:center;background:#FFFDF8;border:2px solid #5B3E96;border-radius:16px;padding:16px 20px}',
+    '.sn-secnot{margin:0;font-size:22px;color:#5A5266}',
+    '.sn-girkap{position:relative}',
+    '.sn-sec input{font:inherit;font-size:40px;min-height:76px;padding:6px 16px;border:3px solid #5B3E96;border-radius:12px;background:#fff;color:transparent;caret-color:#2B2238;width:100%;display:block;box-sizing:border-box}',
+    '.sn-sec input::placeholder{color:#8E8494}',
+    '.sn-sec input:focus{outline:4px solid #F2C14E;outline-offset:2px}',
+    '.sn-ayna{position:absolute;left:0;top:0;right:0;bottom:0;padding:6px 19px;border:3px solid transparent;font-size:40px;display:flex;align-items:center;white-space:pre;overflow:hidden;pointer-events:none;color:#2B2238}',
+    '.sn-ayna .sn-soluk{opacity:.35}',
+    '.sn-secsoluk{margin:0;font-size:22px;color:#5A5266}.sn-secsoluk:empty{display:none}',
+    '.sn-secdonut{margin:0;font-size:24px;min-height:30px;color:#7A330A}',
+    '.sn-secalt{display:flex;flex-wrap:wrap;gap:10px;align-items:center}',
+    '.sn-haziret{font-size:22px;color:#5A5266;margin-left:8px}',
+    '.sn-hazir{display:flex;flex-wrap:wrap;gap:10px}',
+    '.sn-hazircumle{background:#FFFDF8;border:2px solid #CFC5B3}',
+    '.sn-ray{flex:1;min-width:0;position:relative;overflow:hidden;background:#FFFDF8;border:2px solid #CFC5B3;border-radius:16px;padding:6px 12px;display:flex;align-items:center}',
+    '.sn-hatlar{width:100%;line-height:1;font-size:60px;transition:transform 2.2s cubic-bezier(.5,0,.8,.4)}',
+    '.sn-ray.sn-cik .sn-hatlar{transform:translateX(130%)}',
+    '.sn-hatic{white-space:nowrap;width:max-content;max-width:none}',
+    '.sn-ray .loko{margin-bottom:-.36em}',
+    '.sn-ray .vagon{background:#FFFDF8}',
+    '.sn-ray .vagon.sn-hayalet{border-style:dashed;border-color:#8E8494;color:rgba(43,34,56,.32)}',
+    '.sn-ray .vagon.sn-hayalet.sn-solukv{color:rgba(43,34,56,.18)}',
+    '.sn-ray .vagon.bos.sn-hayalet{border-color:#8E8494}',
+    '.sn-ray .vagon.sn-sirada{border-style:solid;border-color:#D9631E;background:#FBF0CF;color:#2B2238;box-shadow:0 .1em 0 #D9631E}',
+    '.sn-ray .vagon.bos.sn-sirada{background:#FBF0CF!important;border-style:solid;border-color:#D9631E}',
+    '.sn-ray .vagon.sn-shiftv{border-style:solid;border-color:#1F7A75;color:#2B2238;box-shadow:0 0 0 .08em #FFFDF8,0 0 0 .16em #1F7A75}',
+    '.sn-ray .vagon.sn-dolu{border-style:solid;border-color:#2B2238;color:#2B2238;background:#FFFDF8}',
+    '.sn-ray .vagon.bos.sn-dolu{border-color:#1F7A75;background:#DDF0EE!important}',
+    '#klavye.sn-bekle{opacity:.45;pointer-events:none;transition:opacity .2s}',
+    '#klavye .tus.sn-shift{border:5px solid #1F7A75;background:#DDF0EE}',
+    '#klavye .tus.sn-isaret{box-shadow:0 0 0 6px #F2C14E;animation:snIsaret 1s ease-in-out 2}',
+    '@keyframes snIsaret{50%{box-shadow:0 0 0 12px rgba(242,193,78,.4)}}',
+    '.sn-kart{flex:1;min-width:0;display:flex;flex-direction:column;gap:12px;align-items:center;justify-content:center;background:#FFFDF8;border:2px solid #5B3E96;border-radius:16px;padding:14px 20px}',
+    '.sn-kartbaslik{margin:0;font-size:28px;font-weight:700;color:#5B3E96}',
+    '.sn-karttren{display:flex;flex-direction:column;gap:14px;align-items:center;font-size:44px;line-height:1}',
+    '.sn-khat{display:flex;gap:.18em;flex-wrap:nowrap}',
+    '.sn-kvagon{display:inline-flex;align-items:center;justify-content:center;min-width:1.1em;height:1.35em;padding:0 .12em;border:3px solid #2B2238;border-radius:.18em;font-weight:700;color:#2B2238;background:#FFFDF8}',
+    '.sn-kvagon.bos{min-width:.6em;border:none;background:transparent}',
+    '.sn-kartalt{margin:0;font-size:22px;color:#5A5266}',
+    '.sn-kartdugme{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}',
+    '.sn-baski{display:none}',
+    '@media print{',
+    '  body.sn-baskida > *{display:none!important}',
+    '  body.sn-baskida > #snBaski{display:block!important;padding:10mm 8mm;color:#000;background:#fff}',
+    '  .sn-bbaslik{font-size:18pt;margin:0 0 8mm;font-weight:700}',
+    '  .sn-btren{display:flex;flex-wrap:wrap;gap:8mm .5em;line-height:1;align-items:flex-end}',
+    '  .sn-bsoz{display:inline-flex;gap:.12em;white-space:nowrap;page-break-inside:avoid}',
+    '  .sn-btren .sn-kvagon{border:3px solid #000;color:#000;background:#fff;min-width:1.1em;height:1.4em}',
+    '  .sn-btren .sn-kvagon.bos{border:none;min-width:.6em}',
+    '  .sn-balt{font-size:14pt;margin:10mm 0 0}',
+    '}',
+    // Alçak ekran (tarayıcı araç çubuklu dizüstü, 1366×635): sahne dar düzene geçer, klavye tam görünür kalır
+    '.sn-sahne.dar{gap:4px}.sn-sahne.dar .sn-donut{min-height:26px;font-size:20px;line-height:26px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}',
+    '.sn-sahne.dar .sn-soru{font-size:20px}.sn-sahne.dar .sn-kalan{font-size:18px}',
+    '.sn-sahne.dar .sn-dugmeler button,.sn-sahne.dar .sn-sec button,.sn-sahne.dar .sn-kart button{min-height:64px;font-size:18px;padding:4px 14px}',
+    '.sn-sahne.dar .sn-sec{flex-direction:row;flex-wrap:wrap;align-items:center}.sn-sahne.dar .sn-girkap{flex:1 1 360px}.sn-sahne.dar .sn-secalt{flex:0 1 auto}',
+    '.sn-sahne.dar .sn-kartdugme{flex-wrap:nowrap}',
+    '.sn-sahne.cokdar .sn-hazir,.sn-sahne.cokdar #snBaska,.sn-sahne.cokdar .sn-donut:empty{display:none}',
+    '.sn-sahne.cokdar .sn-sec{padding:2px 8px}.sn-sahne.cokdar .sn-ust .sn-donut{flex:1 1 300px;white-space:normal;overflow:hidden;text-overflow:clip;font-size:18px;line-height:22px;max-height:44px}.sn-sahne.cokdar .sn-soru{flex:1 1 300px}',
+    '.sn-sahne.dar .sn-secnot,.sn-sahne.dar .sn-haziret,.sn-sahne.dar .sn-secsoluk,.sn-sahne.dar .sn-secdonut:empty{display:none}',
+    '.sn-sahne.dar .sn-sec{padding:6px 10px;gap:6px;justify-content:flex-start}',
+    '.sn-sahne.dar .sn-sec input,.sn-sahne.dar .sn-ayna{font-size:26px}.sn-sahne.dar .sn-sec input{min-height:64px;padding:2px 12px}.sn-sahne.dar .sn-ayna{padding:2px 15px}',
+    '.sn-sahne.dar .sn-secdonut{font-size:18px;min-height:0}',
+    '.sn-sahne.dar .sn-kart{flex-direction:row;flex-wrap:wrap;gap:6px 16px;padding:6px 10px}.sn-sahne.dar .sn-kartbaslik{display:none}',
+    '@media (prefers-reduced-motion: reduce){.sn-hatlar{transition:none}#klavye .tus.sn-isaret{animation:none}}',
+    'body.hareketsiz .sn-hatlar{transition:none}body.hareketsiz #klavye .tus.sn-isaret{animation:none}',
+    '@media (max-height:820px) and (orientation:landscape){',
+    '  .sn-sahne{gap:6px}.sn-soru{font-size:22px}.sn-donut{font-size:22px;min-height:28px}.sn-kalan{font-size:20px}',
+    '  .sn-dugmeler button,.sn-sec button,.sn-kart button{font-size:20px;padding:6px 16px}',
+    '  .sn-sec{gap:8px;padding:10px 14px}.sn-sec input,.sn-ayna{font-size:30px}.sn-sec input{min-height:60px}.sn-secnot,.sn-secsoluk,.sn-haziret{font-size:18px}',
+    '  .sn-karttren{font-size:32px}.sn-kartbaslik{font-size:22px}',
+    '}',
+    '@media (min-height:1400px){',
+    '  .sn-soru{font-size:56px}.sn-donut{font-size:46px;min-height:60px}.sn-kalan{font-size:40px}',
+    '  .sn-dugmeler button,.sn-sec button,.sn-kart button{font-size:38px;min-height:96px;padding:12px 30px}',
+    '  .sn-sec input,.sn-ayna{font-size:64px}.sn-sec input{min-height:120px}.sn-secnot,.sn-secsoluk,.sn-haziret{font-size:36px}',
+    '  .sn-karttren{font-size:80px}.sn-kartbaslik{font-size:48px}.sn-kartalt{font-size:36px}',
+    '}'
+  ].join('\n');
+
+  var TREN = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 32" aria-hidden="true"><rect x="1" y="12" width="10" height="11" rx="2" fill="#FFFDF8" stroke="#2B2238" stroke-width="2"/><rect x="13" y="12" width="10" height="11" rx="2" fill="#FFFDF8" stroke="#2B2238" stroke-width="2"/><rect x="25" y="10" width="13" height="13" rx="2" fill="#D9631E" stroke="#2B2238" stroke-width="2"/><rect x="28" y="4" width="4" height="7" fill="#2B2238"/><circle cx="4" cy="26" r="2.5" fill="#2B2238"/><circle cx="8" cy="26" r="2.5" fill="#2B2238"/><circle cx="16" cy="26" r="2.5" fill="#2B2238"/><circle cx="20" cy="26" r="2.5" fill="#2B2238"/><circle cx="29" cy="26" r="3" fill="#2B2238"/><circle cx="35" cy="26" r="3" fill="#2B2238"/><path d="M0 30 H40" stroke="#5A5266" stroke-width="2"/></svg>';
+  function dugmeKur() {
+    var b = document.createElement('button'); b.type = 'button'; b.id = 'snAc'; b.className = 'gizli';
+    b.appendChild(document.importNode(new DOMParser().parseFromString(TREN, 'image/svg+xml').documentElement, true));
+    var sp = yap('span', '', t('dugme')); b.appendChild(sp); el.acYazi = sp;
+    b.addEventListener('click', ac);
+    var ar = api.$('araclar'), once = api.$('btnGeriSar');
+    if (once) ar.insertBefore(b, once); else ar.appendChild(b);
+    el.acDugme = b;
+  }
+  function dugmeGoster() { if (el.acDugme) el.acDugme.classList.toggle('gizli', !tahta()); }
+
+  ek = {
+    ad: 'sinif',
+    kur: function (a) {
+      api = a;
+      var st = document.createElement('style'); st.textContent = CSS; document.head.appendChild(st);
+      dugmeKur();
+      sahneKur();
+      metinleriYaz();
+      api.on('basaDon', function () { kapat(); dugmeGoster(); });
+      api.on('basla', function () { kapat(); dugmeGoster(); metinleriYaz(); });
+      api.on('dil', function () { metinleriYaz(); if (acik && durum === 'sec') secAc(); });
+      window.addEventListener('resize', function () { if (acik) setTimeout(function () { sahneBuyut(); isaretYenile(); }, 120); });
+      document.addEventListener('pointerdown', function (e) {
+        if (!acik) return;
+        var tus = e.target && e.target.closest ? e.target.closest('#klavye .tus') : null;
+        if (!tus) return;
+        e.stopPropagation(); e.preventDefault();
+        var c = tus.getAttribute('data-code'), simdi = Date.now();
+        if (c === sonTus.c && simdi - sonTus.t < 300) return;   // aynı tuşta 300 ms kilidi
+        sonTus = { c: c, t: simdi };
+        // Kızılötesi tahtada avuç ve hayalet temas uygulamanın kararıyla elenir
+        api.dokunKarar(e, function () {
+          if (durum === 'sec') { secTus(c, null); return; }
+          if (durum === 'goster') dene(c);
+        }, durum === 'goster' ? 120 : 0);
+      }, true);
+    },
+    tus: function (e) {
+      if (!acik) return;
+      var code = e.code;
+      if (code === 'Escape') { e.preventDefault(); kapat(); return; }
+      if (e.ctrlKey || e.metaKey || e.altKey) return;
+      if (code === 'Tab' || code === 'Space' || code === 'Enter' || code === 'Backspace' || /^Arrow/.test(code) || code === 'Quote' || code === 'Slash') e.preventDefault();
+      if (durum === 'sec') { secTus(code, e.key); return; }
+      if (durum === 'bekle' && (code === 'Enter' || code === 'NumpadEnter')) { goster(); return; }
+      if (durum !== 'goster' || e.repeat) return;
+      if (code === 'CapsLock' || /^(Control|Alt|Meta|OS)/.test(code)) return;
+      var a = adimlar[ai], once = adimlar[ai - 1];
+      // Shift basılı tutularak hedef harfe basıldı: Shift adımı da tamam sayılır, kilit beklenmez
+      if (a && a.tip === 'shift' && e.shiftKey && code !== 'ShiftLeft' && code !== 'ShiftRight' && adimlar[ai + 1] && adimlar[ai + 1].code === code) {
+        dene('ShiftLeft'); clearTimeout(zaman2); kilit = false; dene(code); return;
+      }
+      if (kilit && once && once.tip === 'shift' && a && a.code === code) { clearTimeout(zaman2); kilit = false; }
+      dene(code === 'ShiftRight' ? 'ShiftLeft' : code);
+    },
+    sesMetinleri: function () {
+      var out = []; Object.keys(H().kod).forEach(function (c) { var m = adSes(c); if (m && out.indexOf(m) < 0) out.push(m); }); return out;
+    },
+    // testler için
+    durum: function () {
+      return { acik: acik, durum: durum, cumle: cumle, ai: ai, adimSayisi: adimlar.length, iska: iska, kilit: kilit,
+        adimlar: adimlar.map(function (a) { return a.tip + ':' + a.ch; }),
+        dolu: el.hatlar ? el.hatlar.querySelectorAll('.vagon.sn-dolu').length : 0,
+        soru: el.soru ? el.soru.textContent : '', donut: el.donut ? el.donut.textContent : '', kalan: el.kalan ? el.kalan.textContent : '',
+        bekliyor: !!(api.$('klavye') && api.$('klavye').classList.contains('sn-bekle')), hazir: hazirlar() };
+    },
+    ac: ac, kapat: kapat, goster: function () { goster(); }, beklemeSuresi: function (ms) { BEKLE = ms; },
+    cumleYaz: function (s) { el.gir.value = s; girdi(); }, basla: function () { basla(); }
+  };
+  (window.YT_EKLER = window.YT_EKLER || []).push(ek);
+})();
+
 /* YazTahta eki: Tamir istasyonu (öğretmen için sorun bildirme).
    Ayarlar'dan ve giriş ekranından açılır. Tren istasyona girer; öğretmen ne olduğunu seçer, isterse bir cümle yazar.
    Uygulama yol kaydını (sürüm, düzen, kip, tarayıcı, ekran, son basışlar) kendisi doldurur ve öğretmene gösterir.
@@ -6441,8 +7158,11 @@ var qrcode = function() {
         var simdi = Date.now();
         if (c === sonTus.c && simdi - sonTus.t < 300) return;
         sonTus = { c: c, t: simdi };
-        if (durum === 'cumle') { cumleTus(c, null); return; }
-        dene(c, true);
+        // Kızılötesi tahtada avuç ve hayalet temas uygulamanın kararıyla elenir
+        api.dokunKarar(e, function () {
+          if (durum === 'cumle') { cumleTus(c, null); return; }
+          dene(c, true);
+        });
       }, true);
     },
     tus: function (e) {
@@ -7980,7 +8700,19 @@ var qrcode = function() {
     aktif: function () { return aktifEk; },
     dil: function () { return YT_DIL.dil; },
     klavyeCiz: function () { if (!$('ana').classList.contains('gizli')) klavyeCiz(); },
-    sonBasislar: function (n) { return gecmis.slice(-(n || 5)).map(function (g) { return g.code; }); }
+    sonBasislar: function (n) { return gecmis.slice(-(n || 5)).map(function (g) { return g.code; }); },
+    tarif: function (a, b) { return tarif(H.kod[a], H.kod[b]); },
+    tusCumle: function (c) { return tusCumle(H.kod[c]); },
+    // Ekin kendi dokunma işleyicisi için: kızılötesi tahtada avuç ve hayalet temas elenir, sonra fn çalışır
+    // gecikme verilirse karar o kadar bekler (sıralı etkinliklerde gecikme sorun değil, avucun ikinci teması mutlaka gelir)
+    dokunKarar: function (e, fn, gecikme) {
+      var c = ayar.kip === 'tahta' && dokunmaMi(e) ? temasBul(e.pointerId) : null;
+      if (!c) { fn(); return; }
+      var bitti = false, karar = function () { if (bitti) return; bitti = true; hayaletBul(); if (!c.hayalet && !avucMu(c)) fn(); };
+      if (gecikme) { setTimeout(karar, gecikme); return; }
+      if (window.requestAnimationFrame) requestAnimationFrame(karar);
+      setTimeout(karar, 50);
+    }
   };
   (window.YT_EKLER || []).forEach(function (ek) { try { ek.kur(API); } catch (err) { if (window.console) console.warn('ek kur', ek.ad, err); } });
 

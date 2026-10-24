@@ -17,6 +17,7 @@ Nasıl kullanıldığını YouTube'da gösteriyorum: https://www.youtube.com/@eg
 - **Tuşun yolculuğu:** Tuştan ekrana giden yol.
 - **Klavye yapbozu.**
 - **Tatildeki tuş:** Bir tuş tatile çıkar, defter onsuz bozulur, kartpostal gelir. Sınıf hangi tuşun eksik olduğunu bulur. "Sınıfın cümlesi" ile sınıfın söylediği cümleden bir tuş tatile çıkar.
+- **Sınıfın treni:** Sınıf bir cümle kurar, cümle tahtada vagon vagon dolar. Her adımda önce herkes kâğıt klavyede tuşu bulur, sonra biri tahtada dokunur. Bitince cümle kartını panoya yazdırırsınız.
 - **Meraklısına, On parmak:** İsteyen öğrenci için on parmak çalışması. Gözler kapalı çalışma ve şekille ayrılan parmaklar var.
 - Seslendirme gömülü. İnternet istemez.
 
@@ -94,6 +95,7 @@ I show how to use it on YouTube: https://www.youtube.com/@egitimtek
 - **Key's journey:** the path from key to screen.
 - **Keyboard puzzle.**
 - **Key on holiday:** a key goes on holiday, the notebook breaks without it, a postcard arrives, and the class works out which key is missing. "Class sentence" takes one key out of a sentence the class says.
+- **Class train:** the class makes up a sentence and fills it wagon by wagon on the board. At each step everyone first finds the key on a paper keyboard, then one pupil taps it on the board. At the end, print the sentence card for the wall.
 - **For the curious, Ten fingers:** an optional touch-typing section for pupils who want more, with an eyes-closed mode and fingers marked by shape as well as colour.
 - Built-in voice-over. No internet needed.
 
